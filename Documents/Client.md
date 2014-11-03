@@ -17,7 +17,7 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 
  - 4399单机SDK（Android）接入说明：SDK接入文档，即本文档
  - m4399RechargeSDK：SDK资源文件工程内含SDK jar包和so库
- - m4399ConsoleOperateSDKDemo工程：Demo工程
+ - m4399SingleOperateSDKDemo工程：Demo工程
 
 # 集成流程
 
@@ -30,12 +30,12 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 ## SDK集成流程
 假设现在你的工程目录名字叫project，下面将具体介绍如何将SDK接入project中。
 ### 关联资源工程
-1. 将m4399ConsoleOperateSDK工程关联到project
-* 将m4399ConsoleOperateSDK导入到eclipse中
-* 右键点击4399ConsoleOperateSDK工程名→Properties→Android
+1. 将m4399RechargeSDK工程关联到project
+* 将m4399RechargeSDK导入到eclipse中
+* 右键点击工程名→Properties→Android
 * 勾选Is Library→OK
 * 右键点击project工程名→Properties→Add
-* 在弹出的对话框中点选资源工程m4399ConsoleOperateSDK→OK
+* 在弹出的对话框中点选资源工程m4399RechargeSDK→OK
 
 ### 配置AndroidManifest.xml文件
 - 添加SDK所需的权限
@@ -94,24 +94,22 @@ new OperateCenterConfig.Builder(this)
 	.setGameName("测试游戏")	//换成实际游戏的名字，原则上与游戏名字匹配
 	.build();
 		
-OnConsoleRechargeFinishedListener onRechargeFinishedListener = 
-	new OnConsoleRechargeFinishedListener() {
-		//充值结束，游戏在此根据不同情况做不同处理
-		@Override
-		public void onRechargeFinished(boolean success, int resultCode, 
-			String msg) {
-			Log.d(TAG, "Pay: [" + success + ", " + resultCode + ", " + msg + "]");
-			showInToast(resultCode + ": " + msg);
-		}
+SingleRechargeListener onRechargeFinishedListener = new SingleRechargeListener() {
+	//充值结束，游戏在此根据不同情况做不同处理
+	@Override
+	public void onRechargeFinished(boolean success, int resultCode, String msg)
+		Log.d(TAG, "Pay: [" + success + ", " + resultCode + ", " + msg + "]");
+		showInToast(resultCode + ": " + msg);
+	}
         
         //游戏在此发放物品，并返回发放的结果——true，发放成功；false， 发放失败
-		@Override
-		public boolean onDistributeGoodsFinished(RechargeOrder o) {
-			Log.d(TAG, "单机充值发放物品, [" + o + "]");
-			showInToast("发放物品, " + o)；
-			return true;
-		}
-	};
+	@Override
+	public boolean notifyDeliverGoods(boolean shouldDeliver, RechargeOrder o) {
+		Log.d(TAG, "单机充值发放物品, [" + o + "]");
+		showInToast("发放物品, " + o)；
+		return true;
+	}
+};
 mOpeCenter.init(MainActivity.this, onRechargeFinishedListener);
 ```
 `是否支持处理超出部分金额`也可单独设置  
@@ -120,7 +118,7 @@ mOpeCenter.setSupportExcess(support);
 ```
 `能否支持处理超出部分金额`指在使用SDK充值时，由于用户选择的充值渠道不同，可能造成实际充值金额超出游戏下单时传入的金额。如果游戏能够正确处理超出部分的金额，则本接口传入true。如果无法支持处理超出部分的金额，则传入false，SDK将会根据传入金额自动隐藏无法满足充值金额的渠道（例：开发者设置SupportExcess为false，充值时传入7元，此时4399一卡通中无7元面额的充值卡，此时4399一卡通的充值渠道将自动隐藏）。*SupportExcess*默认为false。
 
-*注：代码中`MainActivity`为当前Activity.下文的`mOpeCenter`指`ConsoleOperateCenter`实例，通过`getInstance()`静态方法获得。*   
+*注：代码中`MainActivity`为当前Activity.下文的`mOpeCenter`指`SingleOperateCenter`实例，通过`getInstance()`静态方法获得。*   
 
 ## 检查更新
 SDK将检查后台是否有新版本游戏上线，如果有，则显示更新内容，并提示用户升级。该升级为`增量升级`，后台在提交新版游戏时自动制作差分包，更新时用户只需下载APK文件中新旧版本有差异的部分。相关更新内容和版本提交事宜，请联系4399相关运营对接人员。  
@@ -136,8 +134,7 @@ SDK将检查后台是否有新版本游戏上线，如果有，则显示更新�
 ```java
 mOpeCenter.recharge(MainActivity.this, je, productName);
 ```
-* `je`充值金额：4399充值中心仅支持整数金额充值，最小充值金额`1`元，最大不超过`50000`元。
-* `mark`订单号：最大长度32位，由包含字母或数字组成的唯一字符串，该字段不可为空。
+* `je`充值金额：是整数字符串，4399充值中心仅支持整数金额充值，最小充值金额`1`元，最大不超过`50000`元。
 * `productName`商品名称：最长不超过8个字符。 如果传入商品名，充值中心将直接显示改商品名称，如果充值金额大于下单时传入的`je`时，将显示商品名+XXX游戏币，相关游戏币的兑换比例在接入时提供给运营人员配置。如果未传入商品名，则直接显示XXX游戏币。
 
 
