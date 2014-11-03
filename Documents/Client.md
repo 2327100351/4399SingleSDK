@@ -54,16 +54,16 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 
 - 注册SDK相关Activity&Service，注意必须放入`<application>`元素区块内
 ```xml
-        <!-- For 4399 Recharge SDK -->
-        <activity
-            android:name="cn.m4399.recharge.ui.activity.RechargeActivity"
-            android:launchMode="singleTask"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:theme="@style/m4399ActivityTheme" />
-            
-	<!--------以下为第三方支付SDK Activity&Service配置------------>
-        <activity android:name="com.alipay.sdk.app.H5PayActivity" 
-            android:screenOrientation="landscape"/>
+<!-- For 4399 Recharge SDK -->
+<activity
+	android:name="cn.m4399.recharge.ui.activity.RechargeActivity"
+        android:launchMode="singleTask"
+        android:configChanges="orientation|screenSize|keyboardHidden"
+        android:theme="@style/m4399ActivityTheme" />
+           
+<!--------以下为第三方支付SDK Activity&Service配置------------>
+<activity android:name="com.alipay.sdk.app.H5PayActivity" 
+        android:screenOrientation="landscape"/>
 ```
 * 注：第三方支付SDK的Activity需在AndroidManifest.xml中强制配置横竖屏，请游戏方根据游戏的横竖屏要求手工配置`landscape`|`portrait`
 
@@ -93,16 +93,36 @@ new OperateCenterConfig.Builder(this)
 	.setGameKey("70000") 	//换成实际游戏的gamekey
 	.setGameName("测试游戏")	//换成实际游戏的名字，原则上与游戏名字匹配
 	.build();
-		
-SingleRechargeListener onRechargeFinishedListener = new SingleRechargeListener() {
-	//充值结束，游戏在此根据不同情况做不同处理
+	
+//单机充值回调	
+SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
+	/*
+	 * 充值过程结束时SDK回调此方法
+	 * 
+	 * @param resultCode
+	 * 	表示充值结果的状态码
+	 * @param msg
+	 *  表示充值结果的友好的文本说明
+	 *  
+	 *  充值过程结束并不代表订单生命周期全部完成，SDK还需要查询订单状态，游戏
+	 *  要根据订单状态决定是否发放物品等
+	 */
 	@Override
-	public void onRechargeFinished(boolean success, int resultCode, String msg)
+	public void onRechargeFinished(int resultCode, String msg)
 		Log.d(TAG, "Pay: [" + success + ", " + resultCode + ", " + msg + "]");
 		showInToast(resultCode + ": " + msg);
 	}
         
-        //游戏在此发放物品，并返回发放的结果——true，发放成功；false， 发放失败
+        /*
+	 * 充值过程成功完成后，SDK会查询订单状态，根据订单状态状态正常则通知游戏发放物品
+	 * 
+	 * @param shouldDeliver
+	 *  是否要发放物品
+	 * @param o
+	 *  封装了最后提交的订单信息的对象
+	 * @return 
+	 *  物品发放过程是否成功
+	 */
 	@Override
 	public boolean notifyDeliverGoods(boolean shouldDeliver, RechargeOrder o) {
 		Log.d(TAG, "单机充值发放物品, [" + o + "]");
@@ -110,13 +130,27 @@ SingleRechargeListener onRechargeFinishedListener = new SingleRechargeListener()
 		return true;
 	}
 };
-mOpeCenter.init(MainActivity.this, onRechargeFinishedListener);
+mOpeCenter.init(MainActivity.this, singleRechargeListener);
 ```
 `是否支持处理超出部分金额`也可单独设置  
 ```java
 mOpeCenter.setSupportExcess(support);
 ```
 `能否支持处理超出部分金额`指在使用SDK充值时，由于用户选择的充值渠道不同，可能造成实际充值金额超出游戏下单时传入的金额。如果游戏能够正确处理超出部分的金额，则本接口传入true。如果无法支持处理超出部分的金额，则传入false，SDK将会根据传入金额自动隐藏无法满足充值金额的渠道（例：开发者设置SupportExcess为false，充值时传入7元，此时4399一卡通中无7元面额的充值卡，此时4399一卡通的充值渠道将自动隐藏）。*SupportExcess*默认为false。
+
+`RechargeOrder`的说明
+```java
+/**
+ * 封装最终提交的订单信息, 主要包含以下成员
+ * payChannel：		充值渠道
+ * orderId：		充值订单号
+ * je：			充值金额
+ * goods：		购买的物品
+ *
+ * 各个成员都有相应的getter方法
+ */
+public RechargeOrder(String payChannel, String orderId, String je, String goods);
+```
 
 *注：代码中`MainActivity`为当前Activity.下文的`mOpeCenter`指`SingleOperateCenter`实例，通过`getInstance()`静态方法获得。*   
 
