@@ -114,12 +114,16 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	}
 	
 	/**
-	 * 充值过程成功完成后，SDK会查询订单状态，根据订单状态状态正常则通知游戏发放物品
+	 * 充值过程成功完成后，SDK会查询订单状态，根据订单状态状态通知游戏发放物品
 	 * 
 	 * @param shouldDeliver
 	 *  是否要发放物品
 	 * @param o
-	 *  封装了最后提交的订单信息的对象
+	 *  封装了最后提交的订单信息的对象，主要包含以下成员，各成员都有getter方法
+	 *  payChannel：	充值渠道
+	 *  orderId：		充值订单号
+	 *  je：		充值金额
+	 *  goods：		购买的物品
 	 * @return 
 	 *  物品发放过程是否成功
 	 */
@@ -131,19 +135,6 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	}
 };
 mOpeCenter.init(MainActivity.this, singleRechargeListener);
-```
-`RechargeOrder`的说明
-```java
-/**
- * 封装最终提交的订单信息, 主要包含以下成员
- * payChannel：		充值渠道
- * orderId：		充值订单号
- * je：			充值金额
- * goods：		购买的物品
- *
- * 各个成员都有相应的getter方法
- */
-public RechargeOrder(String payChannel, String orderId, String je, String goods);
 ```
 
 `是否支持处理超出部分金额`也可单独设置  
