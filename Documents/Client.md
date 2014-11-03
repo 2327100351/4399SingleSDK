@@ -96,7 +96,7 @@ new OperateCenterConfig.Builder(this)
 	
 //单机充值回调	
 SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
-	/*
+	/**
 	 * 充值过程结束时SDK回调此方法
 	 * 
 	 * @param resultCode
@@ -112,8 +112,8 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 		Log.d(TAG, "Pay: [" + success + ", " + resultCode + ", " + msg + "]");
 		showInToast(resultCode + ": " + msg);
 	}
-        
-        /*
+	
+	/**
 	 * 充值过程成功完成后，SDK会查询订单状态，根据订单状态状态正常则通知游戏发放物品
 	 * 
 	 * @param shouldDeliver
@@ -132,12 +132,6 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 };
 mOpeCenter.init(MainActivity.this, singleRechargeListener);
 ```
-`是否支持处理超出部分金额`也可单独设置  
-```java
-mOpeCenter.setSupportExcess(support);
-```
-`能否支持处理超出部分金额`指在使用SDK充值时，由于用户选择的充值渠道不同，可能造成实际充值金额超出游戏下单时传入的金额。如果游戏能够正确处理超出部分的金额，则本接口传入true。如果无法支持处理超出部分的金额，则传入false，SDK将会根据传入金额自动隐藏无法满足充值金额的渠道（例：开发者设置SupportExcess为false，充值时传入7元，此时4399一卡通中无7元面额的充值卡，此时4399一卡通的充值渠道将自动隐藏）。*SupportExcess*默认为false。
-
 `RechargeOrder`的说明
 ```java
 /**
@@ -151,6 +145,12 @@ mOpeCenter.setSupportExcess(support);
  */
 public RechargeOrder(String payChannel, String orderId, String je, String goods);
 ```
+
+`是否支持处理超出部分金额`也可单独设置  
+```java
+mOpeCenter.setSupportExcess(support);
+```
+`能否支持处理超出部分金额`指在使用SDK充值时，由于用户选择的充值渠道不同，可能造成实际充值金额超出游戏下单时传入的金额。如果游戏能够正确处理超出部分的金额，则本接口传入true。如果无法支持处理超出部分的金额，则传入false，SDK将会根据传入金额自动隐藏无法满足充值金额的渠道（例：开发者设置SupportExcess为false，充值时传入7元，此时4399一卡通中无7元面额的充值卡，此时4399一卡通的充值渠道将自动隐藏）。*SupportExcess*默认为false。
 
 *注：代码中`MainActivity`为当前Activity.下文的`mOpeCenter`指`SingleOperateCenter`实例，通过`getInstance()`静态方法获得。*   
 
