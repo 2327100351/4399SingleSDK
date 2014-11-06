@@ -37,6 +37,8 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 * 右键点击project工程名→Properties→Add
 * 在弹出的对话框中点选资源工程m4399RechargeSDK→OK
 
+*若游戏仅支持部分指令集，需要在引入资源工程后将`m4399RechargeSDK\lib\`目录下未使用的指令集文件夹删除。如游戏仅支持`arm6`（armeabi），即可将其余的`x86`、`arm64-v8a`、`armeabi-v7a`文件夹删除。*
+
 ### 配置AndroidManifest.xml文件
 - 添加SDK所需的权限
 ``` xml
@@ -161,13 +163,6 @@ mOpeCenter.recharge(MainActivity.this, je, productName);
 ```
 * `je`充值金额：是整数字符串，4399充值中心仅支持整数金额充值，最小充值金额`1`元，最大不超过`50000`元。
 * `productName`商品名称：最长不超过8个字符。 如果传入商品名，充值中心将直接显示改商品名称，如果充值金额大于下单时传入的`je`时，将显示商品名+XXX游戏币，相关游戏币的兑换比例在接入时提供给运营人员配置。如果未传入商品名，则直接显示XXX游戏币。
-
-
-## 获取状态信息
-工具接口，用于将回调函数中的`resultCode`解析为中文的说明(充值接口recharge的resultCode对应的中文是回调中的msg)。
-```java
-String resultMessage = OperateCenter.getResultMsg(resultCode);
-```
 
 ## 析构
 游戏退出时调用本接口，释放SDK资源以及保存相关数据。
