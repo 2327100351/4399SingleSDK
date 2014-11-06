@@ -22,10 +22,10 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 # 集成流程
 
 ## 接入前期准备
-1. 在[4399原创平台](http://www.4399api.com/)创建单机游戏
-2. 填写游戏相关信息
-3. 游戏创建成功后，可在原创平台获取接入所需的`GameKey`
-4. GameKey为接入客户端SDK时使用，在初始化SDK时传入。
+1. 在[4399原创平台](http://www.4399api.com/)创建单机游戏  
+2. 填写游戏相关信息  
+3. 游戏创建成功后，可在原创平台获取接入所需的`GameKey`  
+4. `GameKey`为接入客户端SDK时使用，在初始化SDK时传入。  
 
 ## SDK集成流程
 假设现在你的工程目录名字叫project，下面将具体介绍如何将SDK接入project中。
@@ -51,7 +51,7 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.SEND_SMS" />
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+<uses-permission android:name="android.permission.VIBRATE" />
 ```
 
 - 注册SDK相关Activity&Service，注意必须放入`<application>`元素区块内
@@ -148,7 +148,7 @@ mOpeCenter.setSupportExcess(support);
 *注：代码中`MainActivity`为当前Activity.下文的`mOpeCenter`指`SingleOperateCenter`实例，通过`getInstance()`静态方法获得。*   
 
 ## 检查更新
-SDK将检查后台是否有新版本游戏上线，如果有，则显示更新内容，并提示用户升级。该升级为`增量升级`，后台在提交新版游戏时自动制作差分包，更新时用户只需下载APK文件中新旧版本有差异的部分。相关更新内容和版本提交事宜，请联系4399相关运营对接人员。  
+SDK将检查后台是否有新版本游戏上线，如果有，则显示更新内容，并提示用户升级。该升级为`增量升级`，后台在提交新版游戏时自动制作差分包，更新时用户只需下载APK文件中新旧版本有差异的部分。相关更新内容和版本提交事宜，均须登录原创平台操作。  
 4399SDK的增量升级分为  
 - 全自动增量更新（无需操作，默认初始化完成）
 - 自定义界面增量更新 （当游戏选择使用该策略时，上线前需与4399运营人员沟通）
