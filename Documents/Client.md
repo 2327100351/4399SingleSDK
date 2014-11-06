@@ -85,7 +85,7 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 ## 初始化
 初始化推荐在游戏初始化过程中进行，析构函数则在游戏退出前执行。
 ```java
-mOpeCenter = ConsleOperateCenter.getInstance();
+mOpeCenter = SingleOperateCenter.getInstance();
 new OperateCenterConfig.Builder(this)
 	.setDebugEnabled(true)  //发布游戏时，要设为false
 	.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //界面方向
