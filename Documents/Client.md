@@ -20,6 +20,7 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
  - m4399SingleOperateSDKDemo工程：Demo工程
 
 # 集成流程
+<img src="/Images/work_flow.png" alt="集成流程图" />
 
 ## 接入前期准备
 1. 在[4399原创平台](http://www.4399api.com/)创建单机游戏
@@ -87,7 +88,10 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 ## 初始化
 初始化推荐在游戏初始化过程中进行，析构函数则在游戏退出前执行。
 ```java
+//获取SDK单例
 mOpeCenter = SingleOperateCenter.getInstance();
+
+//配置SDK
 new OperateCenterConfig.Builder(this)
 	.setDebugEnabled(true)  //发布游戏时，要设为false
 	.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //界面方向
@@ -96,7 +100,7 @@ new OperateCenterConfig.Builder(this)
 	.setGameName("测试游戏")	//换成实际游戏的名字，原则上与游戏名字匹配
 	.build();
 	
-//单机充值回调	
+//设置充值回调	
 SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	/**
 	 * 充值过程结束时SDK回调此方法
@@ -136,6 +140,8 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 		return true;
 	}
 };
+
+//初始化SDK
 mOpeCenter.init(MainActivity.this, singleRechargeListener);
 ```
 
