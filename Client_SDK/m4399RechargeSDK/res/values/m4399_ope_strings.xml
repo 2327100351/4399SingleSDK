@@ -43,6 +43,7 @@
     <string name="m4399_ope_login_success">登录成功</string>
     <string name="m4399_ope_sdk_login_failed_unable_access_oauth2">不能取得认证</string>
     <string name="m4399_ope_login_failed_user_cancelled">用户取消登录</string>
+    <string name="m4399_ope_login_failed_game_info_error">游戏信息出错</string>
     <string name="m4399_ope_login_failed_error_known">由于未知原因导致登录失败，请检查网络状况</string> 
     <string name="m4399_ope_logout_success">注销成功</string>
     <string name="m4399_ope_logout_failed_repeated">注销已成功，请勿重复注销</string>
@@ -50,6 +51,11 @@
     <string name="m4399_ope_logout_failed_error_unknown">由于未知原因导致登出失败，请检查网络或者是否已经登录成功</string>
     
     <!-- For check and update apk -->
+    <string name="m4399_ope_check_error">检查更新失败</string>
+    <string name="m4399_ope_result_code">错误码： %1$d</string>
+    <string name="m4399_ope_result_msg">错误信息： %1$s</string>
+    <string name="m4399_ope_check_storage_error">没有足够可用的存储空间</string>
+    <string name="m4399_ope_check_md5_error">检查当前包信息出错</string>
     <string name="m4399_ope_update_now">立即更新</string>
     <string name="m4399_ope_install_now">立即安装</string>
     <string name="m4399_ope_dialog_update_title">游戏更新（%s版)</string>
@@ -64,8 +70,10 @@
     <string name="m4399_ope_update_result_user_canclled">用户取消更新</string>
     <string name="m4399_ope_update_result_update_now">立即更新</string>
     <string name="m4399_ope_update_result_download_success">下载APK成功</string>
+    <string name="m4399_ope_update_result_network_error">不能正常访问服务器，检查更新失败</string>
     <string name="m4399_ope_update_result_check_error">由于未知原因导致检查版本失败</string>
     <string name="m4399_ope_update_result_download_error">由于未知原因导致下载失败</string>
+    <string name="m4399_ope_retry_too_many_times">重试次数过多，请检查网络是否通畅</string>
     <string name="m4399_ope_update_force_hint">再次点击，退出游戏</string>
     
     <!-- For pre-pay -->

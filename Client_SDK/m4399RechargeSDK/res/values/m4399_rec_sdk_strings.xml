@@ -169,11 +169,13 @@
     <string name="m4399_rec_result_console_sing_invalid">数据签名错误，查询订单失败</string>
     
     <!-- For console payment notification -->
-    <string name="m4399_rec_ntf_msg_content_title">4399充值提示</string>
-    <string name="m4399_rec_ntf_content_success_text">您购买的%1$s已到帐（点击查看）</string>
+    <string name="m4399_rec_ntf_ticker_text_success">您在《%1$s》中充值购买成功，前往查看详情</string>
+    <string name="m4399_rec_ntf_ticker_text_failed">您在《%1$s》中充值购买失败，前往查看详情</string>
+    <string name="m4399_rec_ntf_content_title_success">充值购买成功(查看详情)</string>
+    <string name="m4399_rec_ntf_content_title_failed">充值购买失败(查看详情)</string>
+    <string name="m4399_rec_ntf_content_success_text">您购买“%1$s”成功</string>
+    <string name="m4399_rec_ntf_content_failed_text">您购买“%1$s”失败</string>
     <string name="m4399_rec_ntf_content_and">和</string>
-    <string name="m4399_rec_ntf_content_failed_text">在购买%1$s时支付失败（点击联系客服）</string>
-    <string name="m4399_rec_ntf_ticker_text">4399充值提示</string>
     <string name="m4399_rec_ntf_porder">充值订单：%s</string>
 
     <!-- <string name=""></string> -->

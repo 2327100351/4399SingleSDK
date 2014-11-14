@@ -1,6 +1,5 @@
 package cn.m4399.game;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -28,10 +27,9 @@ import android.widget.Toast;
 import cn.m4399.operate.OperateCenterConfig;
 import cn.m4399.operate.SingleOperateCenter;
 import cn.m4399.operate.SingleOperateCenter.SingleRechargeListener;
-import cn.m4399.operate.model.ApkCheckResult;
-import cn.m4399.operate.model.GameUpgradeInfo;
+import cn.m4399.operate.UpgradeInfo;
 import cn.m4399.operate.model.callback.Callbacks.OnCheckFinishedListener;
-import cn.m4399.operate.model.callback.Callbacks.OnUpdateListener;
+import cn.m4399.operate.model.callback.Callbacks.OnDownloadListener;
 import cn.m4399.recharge.RechargeOrder;
 
 public class MainActivity extends Activity {
@@ -230,96 +228,126 @@ public class MainActivity extends Activity {
 	public void onUpdateButtonClicked(View view) {
 		Log.d(TAG, "Update Button Clicked...");
 
-		mOpeCenter.checkUpdateApk(MainActivity.this, new OnCheckFinishedListener() {
+		mOpeCenter.doCheck(MainActivity.this, new OnCheckFinishedListener() {
+
 			@Override
-			public void onCheckResponse(ApkCheckResult checkResultInfo, String newApkFilePath) {
-				Log.d(TAG, checkResultInfo + ": " + newApkFilePath);
-				showCheckResult(checkResultInfo);
+			public void onCheckResponse(UpgradeInfo upgradeInfo) {
+				Log.d(TAG, "onCheckResponse, " + upgradeInfo);
+				showCheckResult(upgradeInfo);
 			}
 		});
 	}
 
 	//显示更新结果
-	private void showCheckResult(ApkCheckResult result) {
-		int code = result.getCode();
-		final GameUpgradeInfo updateInfo = result.getNewApkInfo();
+	private void showCheckResult(UpgradeInfo info) {
+		int code = info.getResultCode();
+		final boolean haveLocalSrc = info.haveLocalSrc();
+		
+		Builder builder = new Builder(MainActivity.this);
 		StringBuilder msgBuilder = new StringBuilder();
+		
+		if (code == UpgradeInfo.APK_CHECK_NO_UPDATE) {
+			msgBuilder.append("\n已经是最新版本");
+			builder.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+		} else if (code == UpgradeInfo.APK_CHECK_NEED_UPDATE) {
+			msgBuilder.append("\n新版本号: ")
+				.append(info.getVersionName() + "-" + info.getVersionCode())
+				.append("\n时间: ").append(info.getUpgradeTime())
+				.append("\n是否强制更新：").append(info.isCompel())
+				.append("\n更新包大小（M）/游戏大小（M）：").append(info.getUpgradeSize() + "/" + info.getNewApkSize())
+				.append("\n更新内容：").append(info.getUpgradeMsg());
+			String action = haveLocalSrc ? "安装更新包" : "开始更新";
+			
+			builder.setPositiveButton(action, new DialogInterface.OnClickListener() {
 
-		if (code == 0x00) {
-			msgBuilder.append("\n检查结果：" + "已经是最新版本");
-		} else if (code == 0x01) {
-			if (updateInfo != null)
-				msgBuilder.append("\n检查结果：")
-				.append("\n版本号: ")
-				.append(updateInfo.getVersion())
-				.append("\n时间: ")
-				.append(updateInfo.getDate())
-				.append("\n是否强制更新：")
-				.append(updateInfo.isCompel())
-				.append("\n补丁/游戏大小：")
-				.append(updateInfo.getPatchSize() + "/" + updateInfo.getGameSizeByte())
-				.append("\n更新内容：")
-				.append(updateInfo.getUpdateMsg());
-			else
-				msgBuilder.append("\ncode: ").append(code).append("\n检查结果: ").append("(更新结果)");
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (haveLocalSrc)
+						mOpeCenter.doInstall(MainActivity.this);
+					else
+						doDownload();
+				}
+
+			}).setNegativeButton("取消更新", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+				}
+
+			});
 		} else {
-			msgBuilder.append("\n检查结果：" + "检查更新失败");
+			msgBuilder.append("\n检查更新失败");
+			msgBuilder.append("\ncode: ").append(code).append("\n失败信息: ").append(info.getResultMsg());
+			builder.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
 		}
 
-		String action = updateInfo.isHaveDownApk() ? "安装更新包" : "开始更新";
-		Builder builder = new Builder(MainActivity.this);
-		builder.setTitle("自定义更新").setMessage(msgBuilder).setPositiveButton(action, new DialogInterface.OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				doUpdate(updateInfo);
-			}
-
-		}).setNegativeButton("取消更新", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-			}
-
-		}).create().show();
+		builder.setTitle("自定义更新").setMessage(msgBuilder);
+		builder.create().show();
 	}
 
-	private void doUpdate(final GameUpgradeInfo info) {
+	private void doDownload() {
 		final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
 		dialog.setMessage("准备下载。。。");
 		dialog.show();
 
-		if (info.isHaveDownApk())
-			dialog.dismiss();
-		mOpeCenter.doUpdate(MainActivity.this, info, new OnUpdateListener() {
+		mOpeCenter.doDownload(MainActivity.this, new OnDownloadListener() {
 
 			@Override
-			public boolean onUpdateSuccess(File newApkFile) {
+			public void onDownloadSuccess() {
 				Log.d(TAG, "onUpdateSuccess");
 				dialog.setMessage("下载成功...");
-				dialog.dismiss();
+				doInstall();
 
-				return false;
+				dialog.dismiss();
 			}
 
 			@Override
-			public void onUpdateFail(int resultCode) {
+			public void onDownloadFail(int resultCode, String eMsg) {
 				Log.d(TAG, "onUpdateFail");
 				dialog.setMessage("下载失败...");
 				dialog.dismiss();
 			}
 
 			@Override
-			public void onUpdateStart() {
+			public void onDownloadStart() {
 				Log.d(TAG, "onUpdateStart");
 				dialog.setMessage("开始更新...");
 			}
 
 			@Override
-			public void onUpdateProgress(long progress, long max) {
+			public void onDownloadProgress(long progress, long max) {
 				long percentage = progress * 100 / max;
 				dialog.setMessage("正在更新, 更新进度：" + percentage + "%");
 			}
 		});
+	}
+	
+	private void doInstall() {
+		Builder builder = new Builder(MainActivity.this);
+		builder.setTitle("安装更新包").setMessage("是否立即安装更新包？").setPositiveButton("立即安装", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				mOpeCenter.doInstall(MainActivity.this);
+			}
+		}).setNegativeButton("暂时不用", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+
+		builder.create().show();
 	}
 	/**************** 结束自定义更新测试 **********************/
 

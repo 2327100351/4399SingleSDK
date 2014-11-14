@@ -38,9 +38,11 @@
         <!-- For 4399 Recharge SDK -->
         <activity
             android:name="cn.m4399.recharge.ui.activity.RechargeActivity"
-            android:launchMode="singleTask"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"
             android:theme="@style/m4399ActivityTheme" />
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity" />
         
     </application>
 
