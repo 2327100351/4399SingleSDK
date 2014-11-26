@@ -38,7 +38,7 @@ v1.0.0  |   2014-10-31  |   张生    |   创建文档
 * 右键点击project工程名→Properties→Add
 * 在弹出的对话框中点选资源工程m4399RechargeSDK→OK
 
-*若游戏仅支持部分指令集，需要在引入资源工程后将`m4399RechargeSDK\lib\`目录下未使用的指令集文件夹删除。如游戏仅支持`arm6`（armeabi），即可将其余的`x86`、`arm64-v8a`、`armeabi-v7a`文件夹删除。*
+*若游戏仅支持部分指令集，需要在引入资源工程后将`m4399RechargeSDK/libs/`目录下未使用的指令集文件夹删除。如游戏仅支持`arm6`（armeabi），即可将其余的`x86`、`arm64-v8a`、`armeabi-v7a`文件夹删除。*
 
 ### 配置AndroidManifest.xml文件
 - 添加SDK所需的权限
