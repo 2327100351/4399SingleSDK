@@ -105,8 +105,6 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	/**
 	 * 充值过程结束时SDK回调此方法
 	 * 
-	 * @param resultCode
-	 * 	表示充值结果的状态码
 	 * @param msg
 	 *  表示充值结果的友好的文本说明
 	 *  
@@ -115,8 +113,7 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	 */
 	@Override
 	public void onRechargeFinished(int resultCode, String msg)
-		Log.d(TAG, "Pay: [" + success + ", " + resultCode + ", " + msg + "]");
-		showInToast(resultCode + ": " + msg);
+		Log.d(TAG, "Pay: [" + msg + "]");
 	}
 	
 	/**
@@ -136,7 +133,6 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	@Override
 	public boolean notifyDeliverGoods(boolean shouldDeliver, RechargeOrder o) {
 		Log.d(TAG, "单机充值发放物品, [" + o + "]");
-		showInToast("发放物品, " + o)；
 		return true;
 	}
 };
