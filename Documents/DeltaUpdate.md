@@ -14,11 +14,11 @@
 ```java
 /**
  * @param MainActivity.this Activity上下文
- * @param OnCheckFinishedListener 请求结果回调，监听器用于返回请求新版本的信息
+ * @param OnCheckFinishedListener 检查更新回调，返回检查更新的结果
  */
 OperateCenter.getInstance().doCheck(MainActivity.this, new OnCheckFinishedListener() {
 	/**
- 	 * 检查新版本后，返回的新版本信息
+ 	 * 返回新版本信息
  	 * @param checkResultInfo 新版本信息的对象 里面包括服务端返回的升级信息
  	 */
 	@Override
