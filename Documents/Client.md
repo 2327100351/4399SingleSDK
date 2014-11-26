@@ -112,7 +112,7 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	 *  要根据订单状态决定是否发放物品等
 	 */
 	@Override
-	public void onRechargeFinished(int resultCode, String msg)
+	public void onRechargeFinished(String msg)
 		Log.d(TAG, "Pay: [" + msg + "]");
 	}
 	
