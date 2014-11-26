@@ -51,8 +51,6 @@ public class MainActivity extends Activity {
 		"竖屏180度"
 	};
 
-	String toastPre = "【DEMO】";
-
 	SingleOperateCenter mOpeCenter;
 	OperateCenterConfig mOpeConfig;
 	SharedPreferences mSp;
@@ -64,7 +62,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		mSp = getSharedPreferences("sdk_sp", MODE_PRIVATE);
-		// 设置DemoActivity的方向
+		// 设置Demo Activity的方向
 		setDemoOrientation();
 		setContentView(R.layout.main);
 		
@@ -104,7 +102,7 @@ public class MainActivity extends Activity {
 			.setDebugEnabled(true)  //发布游戏时，要设为false
 			.setOrientation(getOrientation()) //设置SDK界面方向，应与游戏设置一直
 			.setSupportExcess(true) //设置是否支持超出金额充值
-			.setGameKey("70001") 	//换成实际游戏的gamekey
+			.setGameKey("70001") 	//换成实际游戏的game key
 			.setGameName("测试游戏")	//换成实际游戏的名字，原则上与游戏名字匹配
 			.build();
 		
@@ -147,7 +145,9 @@ public class MainActivity extends Activity {
 				if (shouldDeliver) {
 					Log.d(TAG, "单机充值发放物品, [" + o + "]");
 					showInToast("发放物品, " + o);
-					mSKUList.add("您花费 " + o.getJe() + "元， 购买了 " + o.getGoods());
+					synchronized(MainActivity.class) {
+						mSKUList.add("您花费 " + o.getJe() + "元， 购买了 " + o.getGoods());
+					}
 
 					return true;
 				} else {

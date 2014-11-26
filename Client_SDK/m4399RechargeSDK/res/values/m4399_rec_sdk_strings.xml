@@ -21,7 +21,7 @@
     <string name="m4399_rec_input_cash_hint">请输入你要充值的金额</string>
     <string name="m4399_rec_confirm_pay">确认支付</string>
     <string name="m4399_rec_hotline_4399"><u>0592-3214399</u></string>
-    <string name="m4399_rec_hotline_yidong"><u>4006125880</u></string>
+    <string name="m4399_rec_hotline_yidong"><u>0592-3214399</u></string>
     <string name="m4399_rec_hotline_dianxin"><u>4008867686</u></string>
     <string name="m4399_rec_hotline_liantong"><u>4000600611</u></string>
     <string name="m4399_rec_try_other_payment">其他充值方式</string>
