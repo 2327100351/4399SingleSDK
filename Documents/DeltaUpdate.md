@@ -112,7 +112,7 @@ OperateCenter.getInstance().doDownload(MainActivity.this, new OnDownloadListener
 ```java
 /*
  * 下载成功后，或者本地已有下载好的更新包时，可以调用此函数
- * SDK会更加是增量更新还是全量更新采取不同的安装方式
+ * SDK会根据是增量更新还是全量更新，采取不同的安装方式
  */
 OperateCenter.getInstance().doInstall();
 ```
