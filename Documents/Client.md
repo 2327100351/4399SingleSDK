@@ -104,12 +104,11 @@ new OperateCenterConfig.Builder(this)
 SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	/**
 	 * 充值过程结束时SDK回调此方法
-	 * 
-	 * @param msg
-	 *  表示充值结果的友好的文本说明
 	 *  
-	 *  充值过程结束并不代表订单生命周期全部完成，SDK还需要查询订单状态，游戏
-	 *  要根据订单状态决定是否发放物品等
+	 * 充值过程结束并不代表订单生命周期全部完成，SDK还需要查询订单状态，游戏
+	 * 要根据订单状态决定是否发放物品等
+	 *
+	 * @param msg 表示充值结果的友好的文本说明
 	 */
 	@Override
 	public void onRechargeFinished(String msg)
@@ -127,13 +126,19 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	 *  orderId：		充值订单号
 	 *  je：		充值金额
 	 *  goods：		购买的物品
+	 *
 	 * @return 
 	 *  物品发放过程是否成功
 	 */
 	@Override
-	public boolean notifyDeliverGoods(boolean shouldDeliver, RechargeOrder o) {
-		Log.d(TAG, "单机充值发放物品, [" + o + "]");
-		return true;
+	synchronized public boolean notifyDeliverGoods(boolean shouldDeliver, RechargeOrder o) {
+		if (shouldDeliver) {
+			Log.d(TAG, "单机充值发放物品, [" + o + "]");
+			return true;
+		} else {
+			Log.d(TAG, "单机充值查询到的订单状态不正常，建议不要发放物品");
+			return false;
+		}
 	}
 };
 
