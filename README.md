@@ -2,10 +2,6 @@
 =============
 # SDK下载  
 * [v1.0.0](https://github.com/4399SDKDev/4399SingleSDK/archive/v1.0.0.zip)(2014-12-2)
-* [v1.0.0.3](https://github.com/4399SDKDev/4399SingleSDK/archive/v1.0.0.3.zip)(2014-11-28)
-* [v1.0.0.2](https://github.com/4399SDKDev/4399SingleSDK/archive/v1.0.0.2.zip)(2014-11-26)
-* [v1.0.0.1](https://github.com/4399SDKDev/4399SingleSDK/archive/v1.0.0.1.zip)(2014-11-14)  
-* [v1.0.0.0](https://github.com/4399SDKDev/4399SingleSDK/archive/v1.0.0.0.zip)(2014-11-06)  
 
 # 接入文档
 [Android SDK客户端接入说明文档](https://github.com/4399SDKDev/4399SingleSDK/blob/master/Documents/Client.md)   
