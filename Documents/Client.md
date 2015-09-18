@@ -4,7 +4,8 @@
 ##修改记录
 版本号  |   修改日期    |   修改者  |   修改内容
 --------|---------------|-----------|-------------------------
-v1.0.0  |   2014-10-31  |   张生    |   创建文档
+v1.0.0  |   2014-10-31  |   张生    |   创建文档  
+v1.1.1  |   2015-04-25  |   张生    |   增加历史订单查询功能，调整充值完成接口
 
 # 文档说明
 ## 功能描述
@@ -111,7 +112,7 @@ SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
 	 * @param msg 表示充值结果的友好的文本说明
 	 */
 	@Override
-	public void onRechargeFinished(String msg)
+	public void onRechargeFinished(boolean success, String msg)
 		Log.d(TAG, "Pay: [" + msg + "]");
 	}
 	
