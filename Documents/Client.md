@@ -8,6 +8,7 @@
 v1.0.0  |   2014-10-31  |   张生    |   创建文档  
 v1.1.1  |   2015-04-25  |   张生    |   增加历史订单查询功能，调整充值完成接口  
 v1.1.2  |   2015-10-13  |   张生    |   增加带透传字段的充值接口的说明  
+v1.4.0  |   2019-09-10  |   涂仕聪    |   为独立开发者提供礼包接口  
 
 # 文档说明
 ## 功能描述
@@ -19,8 +20,8 @@ v1.1.2  |   2015-10-13  |   张生    |   增加带透传字段的充值接口�
 ## 开发包内容
 
  - 4399单机SDK（Android）接入说明：SDK接入文档，即本文档
- - m4399RechargeSDK：SDK资源文件工程内含SDK jar包和so库
- - m4399SingleOperateSDKDemo工程：Demo工程
+ - m4399Single：SDK资源文件工程内含SDK jar包和so库
+ - m4399SingleDemo工程：Demo工程
 
 # 集成流程
 <img src="/Images/work_flow.png" alt="集成流程图" />
@@ -34,32 +35,53 @@ v1.1.2  |   2015-10-13  |   张生    |   增加带透传字段的充值接口�
 ## SDK集成流程
 假设现在你的工程目录名字叫project，下面将具体介绍如何将SDK接入project中。
 ### 关联资源工程
-1. 将m4399RechargeSDK工程关联到project
-* 将m4399RechargeSDK导入到eclipse中
+1. 将m4399Single工程关联到project
+* 将m4399Single导入到eclipse中
 * 右键点击工程名→Properties→Android
 * 勾选Is Library→OK
 * 右键点击project工程名→Properties→Add
-* 在弹出的对话框中点选资源工程m4399RechargeSDK→OK
+* 在弹出的对话框中点选资源工程m4399Single→OK
 
-*若游戏仅支持部分指令集，需要在引入资源工程后将`m4399RechargeSDK/libs/`目录下未使用的指令集文件夹删除。如游戏仅支持`arm6`（armeabi），即可将其余的`x86`、`arm64-v8a`、`armeabi-v7a`文件夹删除。*
+*若游戏仅支持部分指令集，需要在引入资源工程后将`m4399Single/libs/`目录下未使用的指令集文件夹删除。如游戏仅支持`arm6`（armeabi），即可将其余的`x86`、`arm64-v8a`、`armeabi-v7a`文件夹删除。*
 
 ### 配置AndroidManifest.xml文件
 - 添加SDK所需的权限
+<font color = red>demo中添加的easypermissions含support-v13包，所以会看到我们没有依赖support-v13，如游戏方使用不同的动态权限请求方式，需要依赖support-v13包</font>
 ``` xml
-<uses-permission android:name="android.permission.CALL_PHONE"/>
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" 	/>
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.SEND_SMS" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 ```
 
 - 注册SDK相关Activity&Service，注意必须放入`<application>`元素区块内
 ```xml
+<application
+	...
+        android:allowBackup="false"
+        android:networkSecurityConfig="@xml/m4399single_network_security">
+<!-- For 9.0 network -->
+<uses-library
+        android:name="org.apache.http.legacy"
+        android:required="false" />
+<!-- For 7.0 FileProvider -->
+<provider
+        android:name="cn.m4399.operate.SingleFileProvider"
+        android:authorities="${applicationId}.single.FileProvider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+           android:name="android.support.FILE_PROVIDER_PATHS"
+           android:resource="@xml/m4399single_file_paths" />
+</provider>
 <!-- For 4399 Recharge SDK -->
 <activity
 	android:name="cn.m4399.recharge.ui.activity.RechargeActivity"
@@ -72,7 +94,6 @@ v1.1.2  |   2015-10-13  |   张生    |   增加带透传字段的充值接口�
         android:screenOrientation="landscape"/>
 ```
 * 注：第三方支付SDK的Activity需在AndroidManifest.xml中强制配置横竖屏，请游戏方根据游戏的横竖屏要求手工配置`landscape`|`portrait`
-
 
 ### 代码混淆配置
 如果游戏有需要进行代码混淆，请不要混淆联编的jar包下的类，可以在`proguard.cfg`文件里追加以下配置排除SDK jar包中得类
@@ -179,7 +200,41 @@ mOpeCenter.recharge(MainActivity.this, je, productName);
 // extra是透传的字段
 public void recharge(Context context, String money, String productName,String extra)
 ```
+## 礼包兑换
+```java
+mOpeCenter.validateGiftCode(MainActivity.this, new SingleOperateCenter.OnGiftCodeValidatedListener() {
+                    @Override
+                    public void onValidated(String code, String key) {
+                        Log.d(TAG, "code： " + code + ",key: " + key);
+                    }
+                });
+		
+    /**
+     * 礼包兑换码验证接口
+     *
+     * SDK 将打开验证界面，进行接收、验证兑换码和其他交互
+     * 验证成功后通知接入方相关信息
+     *
+     * @param listener 验证成功的回调
+     */
+    public void validateGiftCode(Activity activity,OnGiftCodeValidatedListener listener) {
+        new CodeValidateDialog(activity,listener).show();
+    }
 
+    public interface OnGiftCodeValidatedListener {
+        /**
+         * 礼包兑换码验证成功回调
+         *
+         * 接入方可以在此方法发放物品，也可以进一步对用户验证
+         * <strong>若发放过程中可能出现错误，接入方需要自行处理</strong>
+         *
+         * @param code 礼包兑换码，礼包平台对礼包的标识，验证时使用
+         * @param key 接入方对礼包的标识，在申请礼包活动时一并提交给礼包平台；
+         *            验证成功时通知给接入方，发放时使用
+         */
+        void onValidated(String code, String key);
+    }
+```
 ## 析构
 游戏退出时调用本接口，释放SDK资源以及保存相关数据。
 ```java
