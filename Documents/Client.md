@@ -43,11 +43,11 @@ v1.4.0  |   2019-09-10  |   涂仕聪    |   为独立开发者提供礼包接�
 * 在弹出的对话框中点选资源工程m4399Single→OK
 
 *若游戏仅支持部分指令集，需要在引入资源工程后将`m4399Single/libs/`目录下未使用的指令集文件夹删除。如游戏仅支持`arm6`（armeabi），即可将其余的`x86`、`arm64-v8a`、`armeabi-v7a`文件夹删除。*
+*我们提供的demo中添加的easypermissions含support-v13包，所以会看到我们没有依赖support-v13，如游戏方使用不同的动态权限请求方式，则需要依赖support-v13包
 
 ### 配置AndroidManifest.xml文件
 - 添加SDK所需的权限
 
-<font color=#ff0000 >demo中添加的easypermissions含support-v13包，所以会看到我们没有依赖support-v13，如游戏方使用不同的动态权限请求方式，则需要依赖support-v13包</font>
 ``` xml
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
