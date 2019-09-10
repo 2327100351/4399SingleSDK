@@ -203,6 +203,7 @@ mOpeCenter.recharge(MainActivity.this, je, productName);
 public void recharge(Context context, String money, String productName,String extra)
 ```
 ## 礼包兑换
+- 调用方式
 ```java
 mOpeCenter.validateGiftCode(MainActivity.this, new SingleOperateCenter.OnGiftCodeValidatedListener() {
                     @Override
@@ -210,7 +211,9 @@ mOpeCenter.validateGiftCode(MainActivity.this, new SingleOperateCenter.OnGiftCod
                         Log.d(TAG, "code： " + code + ",key: " + key);
                     }
                 });
-		
+```
+- 接口说明
+```java		
     /**
      * 礼包兑换码验证接口
      *
