@@ -46,7 +46,8 @@ v1.4.0  |   2019-09-10  |   涂仕聪    |   为独立开发者提供礼包接�
 
 ### 配置AndroidManifest.xml文件
 - 添加SDK所需的权限
-<font color = red>demo中添加的easypermissions含support-v13包，所以会看到我们没有依赖support-v13，如游戏方使用不同的动态权限请求方式，需要依赖support-v13包</font>
+
+<font color=red>demo中添加的easypermissions含support-v13包，所以会看到我们没有依赖support-v13，如游戏方使用不同的动态权限请求方式，则需要依赖support-v13包</font>
 ``` xml
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
