@@ -122,7 +122,7 @@ new OperateCenterConfig.Builder(this)
 	.setDebugEnabled(true)  //发布游戏时，要设为false
 	.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //界面方向
 	.setSupportExcess(true) //设置是否支持超出金额充值
-	.setGameKey("70000") 	//换成实际游戏的gamekey
+	.setGameKey("70001") 	//换成实际游戏的gamekey
 	.setGameName("测试游戏")	//换成实际游戏的名字，原则上与游戏名字匹配
 	.build();
 	
