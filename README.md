@@ -1,7 +1,7 @@
 ﻿4399SingleSDK
 =============
 # SDK下载  
-[v1.3.9](https://github.com/4399SDKDev/4399SingleSDK/archive/v1.3.9.zip)(2018-06-04)
+[v1.4.0](https://github.com/4399SDKDev/4399SingleSDK/archive/v1.4.0.zip)(2019-12-12)
 
 
 # 接入文档
