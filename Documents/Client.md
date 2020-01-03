@@ -1,4 +1,4 @@
-4399单机充值SDK Android客户端v1.0.0接入说明
+﻿4399单机充值SDK Android客户端v1.0.0接入说明
 ======================
 
 ## 修改记录  
@@ -74,7 +74,7 @@ v1.4.0  |   2019-09-10  |   涂仕聪    |   为独立开发者提供礼包接�
         android:required="false" />
 <!-- For 7.0 FileProvider -->
 <provider
-        android:name="cn.m4399.operate.SingleFileProvider"
+        android:name="android.support.v4.content.FileProvider"
         android:authorities="${applicationId}.single.FileProvider"
         android:exported="false"
         android:grantUriPermissions="true">
