@@ -91,7 +91,7 @@ v1.4.0  |   2019-09-10  |   涂仕聪    |   为独立开发者提供礼包接�
            
 <!--------以下为第三方支付SDK Activity&Service配置------------>
 <activity android:name="com.alipay.sdk.app.H5PayActivity" 
-        android:screenOrientation="landscape"/>
+        android:screenOrientation="behind"/>
 ```
 * 注：第三方支付SDK的Activity需在AndroidManifest.xml中强制配置横竖屏，请游戏方根据游戏的横竖屏要求手工配置`landscape`|`portrait`
 
