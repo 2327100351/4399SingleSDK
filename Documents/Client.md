@@ -68,30 +68,33 @@ v1.4.0  |   2019-09-10  |   涂仕聪    |   为独立开发者提供礼包接�
 	...
         android:allowBackup="false"
         android:networkSecurityConfig="@xml/m4399single_network_security">
-<!-- For 9.0 network -->
-<uses-library
-        android:name="org.apache.http.legacy"
-        android:required="false" />
-<!-- For 7.0 FileProvider -->
-<provider
-        android:name="android.support.v4.content.FileProvider"
-        android:authorities="${applicationId}.single.FileProvider"
-        android:exported="false"
-        android:grantUriPermissions="true">
-        <meta-data
-           android:name="android.support.FILE_PROVIDER_PATHS"
-           android:resource="@xml/m4399single_file_paths" />
-</provider>
-<!-- For 4399 Recharge SDK -->
-<activity
-	android:name="cn.m4399.recharge.ui.activity.RechargeActivity"
-        android:launchMode="singleTask"
-        android:configChanges="orientation|screenSize|keyboardHidden"
-        android:theme="@style/m4399ActivityTheme" />
+	<!-- For 9.0 network -->
+	<uses-library
+		android:name="org.apache.http.legacy"
+		android:required="false" />
+	<!-- For 7.0 FileProvider -->
+	<provider
+		android:name="android.support.v4.content.FileProvider"
+		android:authorities="${applicationId}.single.FileProvider"
+		android:exported="false"
+		android:grantUriPermissions="true">
+		<meta-data
+		   android:name="android.support.FILE_PROVIDER_PATHS"
+		   android:resource="@xml/m4399single_file_paths" />
+	</provider>
+	<!-- For 4399 Recharge SDK -->
+	<activity
+		android:name="cn.m4399.recharge.ui.activity.RechargeActivity"
+		android:launchMode="singleTask"
+		android:configChanges="orientation|screenSize|keyboardHidden"
+		android:theme="@style/m4399ActivityTheme" />
            
-<!--------以下为第三方支付SDK Activity&Service配置------------>
-<activity android:name="com.alipay.sdk.app.H5PayActivity" 
-        android:screenOrientation="behind"/>
+	<!--------以下为第三方支付SDK Activity&Service配置------------>
+	<activity android:name="com.alipay.sdk.app.H5PayActivity" 
+		android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+                android:exported="false"
+		android:screenOrientation="behind"/>
+</application>
 ```
 * 注：第三方支付SDK的Activity需在AndroidManifest.xml中强制配置横竖屏，请游戏方根据游戏的横竖屏要求手工配置`landscape`|`portrait`
 
