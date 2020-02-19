@@ -110,6 +110,8 @@ v1.6.0  |   2020-02-19  |   涂仕聪    |   新增激活码验证功能
 -keep class cn.m4399.operate.** {*;}
 -keep class cn.m4399.recharge.** {*;}
 -keepclassmembers class cn.m4399.recharge.R$* {*;}
+
+-keep public class cn.m4399.activation.api.** {*;}
 ```
 
 # 接入流程
@@ -242,6 +244,23 @@ mOpeCenter.validateGiftCode(MainActivity.this, new SingleOperateCenter.OnGiftCod
         void onValidated(String code, String key);
     }
 ```
+## 激活码验证功能
+- 接口说明（非必须接口）
+如需激活码验证功能请于代码中添加接口初始化
+
+```java
+public class MainActivity extends Activity
+
+	...
+    private void initSDK() {
+        ....
+        
+        GameActivation.activate(activity, "xxxx", false);//中间参数为游戏的GameKey
+    }
+    
+}
+```
+
 ## 析构
 游戏退出时调用本接口，释放SDK资源以及保存相关数据。
 ```java
