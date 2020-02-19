@@ -245,9 +245,7 @@ mOpeCenter.validateGiftCode(MainActivity.this, new SingleOperateCenter.OnGiftCod
     }
 ```
 ## 激活码验证
-- 接口说明（非必须接口）
-
-如需激活码验证功能请于代码中添加接口初始化
+- 接口说明（非必须接口,如需激活码验证功能请于代码中添加接口初始化）
 
 ```java
 public class MainActivity extends Activity
