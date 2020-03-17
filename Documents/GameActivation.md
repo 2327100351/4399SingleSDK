@@ -21,14 +21,14 @@
 ## 三、接入流程
 
 ### 准备阶段      
-- 1、下载激活模块 [v1.0.2 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.0/4399ActivationSDK-v1.0.2+5.zip)
+- 1、下载激活模块 [v1.0.3 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.0/4399ActivationSDK-v1.0.3+6.zip)
 - 2、 向运营或对接开发申请`gameKey`  
  
 ### 工程配置
 
 #### 依赖
  - 合并res文件夹下的资源
- - 添加4399ActivationSDK-v1.0.2+5.jar至android工程下libs目录
+ - 添加jar至android工程下libs目录
 
 #### AndroidManifest 配置
 ```
