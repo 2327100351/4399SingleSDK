@@ -5,6 +5,7 @@
 |:----              |:----          |:----         |  
 |v1.0.0             |__2020-01-17__ |初始化文档，并加入主要内容|   
 |v1.0.2             |__2020-01-19__ |修复文件冲突|   
+|v1.1.0             |__2020-03-17__ |替换https协议| 
 
 ## 一、关于 SDK
 激活模块，提供游戏激活码的功能，在游戏启动时检查激活，若运营配置了需要激活，则会弹出激活对话框；  
@@ -21,7 +22,7 @@
 ## 三、接入流程
 
 ### 准备阶段      
-- 1、下载激活模块 [v1.0.3 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.0/4399ActivationSDK-v1.0.3+6.zip)
+- 1、下载激活模块 [v1.1.0 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.1/4399ActivationSDK-v1.1.0+7.zip)
 - 2、 向运营或对接开发申请`gameKey`  
  
 ### 工程配置
