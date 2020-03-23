@@ -16,14 +16,14 @@
 *注意：单独激活模块时，要确认游戏本身是否直接或间接接入了其他激活模块*
 
 ## 二、重要概念说明
-- Game Key：或`gameKey`, 游戏的唯一ID，可在[4399开放平台](https://open.4399.cn/main/home)申请；
+- Game Key：或`gameKey`, 游戏的唯一ID，生成和验证激活码需要的基础参数，可在[4399开放平台](https://open.4399.cn/main/home)申请；
 - 激活码：一串数字或字母的组合，由运营投放在4399游戏盒等帖子内、控制用户是否可以进入游戏的方式
   
 ## 三、接入流程
 
 ### 准备阶段      
 - 1、下载激活模块 [v1.1.0 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.1/4399ActivationSDK-v1.1.0+7.zip)
-- 2、在[4399开放平台](https://open.4399.cn/main/home)注册游戏，经运营快速审核后，会得到`gameKey`(接过其他SDK的游戏，已经有此参数，可直接使用)  
+- 2、在[4399开放平台](https://open.4399.cn/main/home)注册游戏，经运营快速审核后，会得到`gameKey`（接过其他SDK的游戏，已经有此参数，可直接使用）  
  
 ### 工程配置
 
