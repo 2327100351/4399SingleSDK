@@ -44,17 +44,11 @@
 -keep public class cn.m4399.activation.api.** {*;}
 ```
 
-## 代码调用
+### 代码调用
 
-#### 游戏初始化
-> 在游戏界面Activity创建完成后调用如下代码
-```java
- //gameKey 需要申请，debug参数默认为false，无需修改
- GameActivation.activate(activity, gameKey, false);
-```
 
-#### 接口调用
-请在activity创建后调用
+#### 激活接口
+在游戏界面Activity创建完成后调用如下代码
 
 ```java
 public class MainActivity extends Activity
