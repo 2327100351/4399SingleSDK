@@ -1,4 +1,4 @@
-﻿# 激活模块API接入文档  
+# 激活模块API接入文档  
 
 
 |文档版本           |变更时间       |变更内容       |  
@@ -6,6 +6,7 @@
 |v1.0.0             |__2020-01-17__ |初始化文档，并加入主要内容|   
 |v1.0.2             |__2020-01-19__ |修复文件冲突|   
 |v1.1.0             |__2020-03-17__ |替换https协议| 
+|v1.1.1             |__2020-05-28__ |支持跳转外部网页| 
 
 ## 一、关于 SDK
 激活模块，提供游戏激活码的功能，在游戏启动时检查激活，若运营配置了需要激活，则会弹出激活对话框；  
@@ -22,7 +23,7 @@
 ## 三、接入流程
 
 ### 准备阶段      
-- 1、下载激活模块 [v1.1.0 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.1/4399ActivationSDK-v1.1.0+7.zip)
+- 1、下载激活模块 [v1.1.1 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.1/4399ActivationSDK-v1.1.1+8.zip)
 - 2、在[4399开放平台](https://open.4399.cn/main/home)注册游戏，经运营快速审核后，会得到`gameKey`（接过其他SDK的游戏，已经有此参数，可直接使用）  
  
 ### 工程配置
@@ -33,11 +34,12 @@
 
 #### AndroidManifest 配置
 ```
+<!-- 接入方应在调用接口前，申请好运行时权限 -->
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 ```
-
+**接入方应在调用接口前，申请好运行时权限，可以使用[EasyPemissions](https://github.com/googlesamples/easypermissions)第三方类库快速处理**
 #### 混淆配置
 如果需要进行代码混淆，请不要混淆jar包下的类
 ```
