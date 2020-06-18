@@ -1,5 +1,4 @@
-﻿﻿4399单机充值SDK Android客户端v1.0.0接入说明
-======================
+# 4399单机SDK 客户端接入文档
 
 ## 修改记录  
 
@@ -14,32 +13,32 @@ v1.6.2  |   2020-03-11  |   涂仕聪    |   激活码功能优化、修复bug
 v1.7.0  |   2020-03-17  |   涂仕聪    |   替换https协议、修改礼包兑换文本提示
 v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 
-# 文档说明
-## 功能描述
+## 文档说明
+### 功能描述
 4399 Android 单机SDK（以下简称：SDK）向游戏开发者提供便捷、可靠的多渠道充值付费、版本升级检测等功能。  
 本文主要描述SDK接口的使用方法，供游戏开发者接入使用。
 
-## 阅读对象
+### 阅读对象
 本文档面向具有一定Android客户端开发能力，了解 Android 客户端的开发和管理人员。
 
-## 开发包内容
+### 开发包内容
 
  - 4399单机SDK（Android）接入说明：SDK接入文档，即本文档
  - m4399Single：SDK资源文件工程内含SDK jar包和so库
  - m4399SingleDemo工程：Demo工程
 
-# 集成流程
+## 集成流程
 <img src="Images/work_flow.png" alt="集成流程图" />
 
-## 接入前期准备
+### 接入前期准备
 1. 在[4399原创平台](http://www.4399api.com/)创建单机游戏  
 2. 填写游戏相关信息  
 3. 游戏创建成功后，可在原创平台获取接入所需的游戏id，即`GameKey`  
 4. `GameKey`为接入客户端SDK时使用，在初始化SDK时传入。  
 
-## SDK集成流程
+### SDK集成流程
 假设现在你的工程目录名字叫project，下面将具体介绍如何将SDK接入project中。
-### 关联资源工程
+#### 关联资源工程
 
 * 将m4399Single导入到eclipse中
 * 右键点击工程名→Properties→Android
@@ -48,7 +47,7 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 * 在弹出的对话框中点选资源工程m4399Single→OK
 
 
-### 配置AndroidManifest.xml文件
+#### 配置AndroidManifest.xml文件
 - 添加SDK所需的权限
 
 ``` xml
@@ -108,7 +107,7 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 
 **注意：第三方 Activity 需要根据接入方应用屏幕方向，手动配置横竖屏**
 
-### 代码混淆配置
+#### 代码混淆配置
 如果接入方有需要进行代码混淆，特别是使用jar 包依赖时，可以在`proguard.cfg`文件里追加以下配置
 ```
 # keep 4399 SDK
@@ -123,8 +122,10 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 -keep class com.alipay.** {*;}
 ```
 
-# 接入流程
-## 初始化
+## 接口调用
+如需了解相关的接口、类或设计细节，可以向开发者咨询接口详情等，或者查看[4399 Single SDK-v2.0.0+31]( http://common:kCcy8iper6@sdkftp.4399doc.com/internal/single/2.0/javadoc/index.html
+)
+### 初始化
 初始化推荐在游戏初始化过程中进行，析构函数则在游戏退出前执行。
 ```java
 	
@@ -152,7 +153,7 @@ public RechargeOrder supportExcess(boolean support);
 > 
 > （例：开发者设置SupportExcess为false，充值时传入7元，此时4399一卡通中无7元面额的充值卡，此时4399一卡通的充值渠道将自动隐藏）。*SupportExcess*默认为false。
 
-## 检查更新
+### 检查更新
 SDK将检查后台是否有新版本游戏上线，如果有，则显示更新内容，并提示用户升级。该升级为`增量升级`，后台在提交新版游戏时自动制作差分包，更新时用户只需下载APK文件中新旧版本有差异的部分。相关更新内容和版本提交事宜，均须登录原创平台操作。  
 4399SDK的增量升级分为  
 - 全自动增量更新（无需操作，默认初始化完成）
@@ -161,7 +162,7 @@ SDK将检查后台是否有新版本游戏上线，如果有，则显示更新�
 
 
 
-## 充值
+### 充值
 当用户需要充值时，可调用本接口启动充值中心界面。
 ```java
 RechargeOrder order = 
@@ -182,7 +183,7 @@ SingleOperateCenter.recharge(mainActivity, order);
 > - 如果传入商品名，SDK 将显示改商品名称，如果充值金额大于下单时传入的金额，则显示“商品名+XXX游戏币”
 > - 如果未传入商品名，则直接显示“XXX游戏币”
 
-## 礼包兑换
+### 礼包兑换
 - 调用方式
 ```java
 // SDK 将打开验证界面，进行接收、验证兑换码和其他交互
@@ -198,16 +199,16 @@ SingleOperateCenter.validateGiftCode(MainActivity.this, new OnGiftCodeValidatedL
 });
 ```
 
-## 激活码验证
+### 激活码验证
 [4399单机SDK激活模块API接入文档](GameActivation.md) 
 
-## 析构
+### SDK 释放
 游戏退出时调用本接口，释放SDK资源以及保存相关数据。
 ```java
 SingleOperateCenter.destroy();
 ```
 
-## 显示SDK版本
+### 显示SDK版本
 ```java
 String version = SingleOperateCenter.getVersion();
 ```
