@@ -33,7 +33,7 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 
 ### SDK集成流程
 假设现在你的工程目录名字叫project，下面将具体介绍如何将SDK接入project中。
-#### 关联资源工程
+#### 关联资源工程（eclipse方式）
 
 * 将m4399Single导入到eclipse中
 * 右键点击工程名→Properties→Android
@@ -122,8 +122,7 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 )
 ### 初始化
 初始化推荐在游戏初始化过程中进行，析构函数则在游戏退出前执行。
-```java
-	
+```java	
 //初始化SDK
 OperateConfig config = new OperateConfig()
         .debuggable(false) //发布游戏时，要设为false
