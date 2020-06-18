@@ -162,13 +162,13 @@ SDK将检查后台是否有新版本游戏上线，如果有，则显示更新�
 ```java
 RechargeOrder order = new RechargeOrder(
         // 充值金额，整数，基本要求大于1，小于50000
-        Integer.parseInt(tvMoney.getText().toString()))
+        1)
         //是否支持超出金额，这里是一个独立的接口，只要在充值之前调用都有作用
-        .supportExcess(checkSupportExcess.isChecked())
+        .supportExcess(true)
         //是否传入商品名，这会影响商品在充值界面的显示
-        .commodity(checkHasSubject.isChecked() ? tvSubject.getText().toString() : null)
+        .commodity("周年庆礼包")
         // 透传参数，JSON 字符串
-        .passThrough(getString(R.string.demo_label_test_extra));
+        .passThrough("测试参数");
 SingleOperateCenter.recharge(mainActivity, order);
 ```
 
