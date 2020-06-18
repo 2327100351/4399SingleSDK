@@ -1,4 +1,4 @@
-﻿4399单机充值SDK Android客户端v1.0.0接入说明
+﻿﻿4399单机充值SDK Android客户端v1.0.0接入说明
 ======================
 
 ## 修改记录  
@@ -12,10 +12,11 @@ v1.4.0  |   2019-09-10  |   涂仕聪    |   为独立开发者提供礼包接�
 v1.6.0  |   2020-02-19  |   涂仕聪    |   新增激活码验证功能  
 v1.6.2  |   2020-03-11  |   涂仕聪    |   激活码功能优化、修复bug
 v1.7.0  |   2020-03-17  |   涂仕聪    |   替换https协议、修改礼包兑换文本提示
+v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 
 # 文档说明
 ## 功能描述
-4399单机版充值SDK（以下简称：SDK）主要用来向第三方游戏开发者提供便捷、安全一级可靠的多渠道单机游戏充值付费、版本升级检测等功能。本SDK适用于所有无需用户登录即可进行充值的Android游戏接入。本文主要描述SDK接口的使用方法，供合作伙伴的开发者接入使用。
+4399单机版充值SDK（以下简称：SDK）主要用来向第三方游戏开发者提供便捷、安全一级可靠的多渠道单机游戏充值付费、版本升级检测等功能。本文主要描述SDK接口的使用方法，供合作伙伴的开发者接入使用。
 
 ## 阅读对象
 本文档面向具有一定Android客户端开发能力，了解Android客户端的开发和管理人员。
@@ -45,23 +46,18 @@ v1.7.0  |   2020-03-17  |   涂仕聪    |   替换https协议、修改礼包兑
 * 右键点击project工程名→Properties→Add
 * 在弹出的对话框中点选资源工程m4399Single→OK
 
-*若游戏仅支持部分指令集，需要在引入资源工程后将`m4399Single/libs/`目录下未使用的指令集文件夹删除。如游戏仅支持`arm6`（armeabi），即可将其余的`x86`、`arm64-v8a`、`armeabi-v7a`文件夹删除。*
 
 ### 配置AndroidManifest.xml文件
 - 添加SDK所需的权限
 
 ``` xml
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 ```
 
@@ -71,10 +67,7 @@ v1.7.0  |   2020-03-17  |   涂仕聪    |   替换https协议、修改礼包兑
 	...
         android:allowBackup="false"
         android:networkSecurityConfig="@xml/m4399single_network_security">
-	<!-- For 9.0 network -->
-	<uses-library
-		android:name="org.apache.http.legacy"
-		android:required="false" />
+	
 	<!-- For 7.0 FileProvider -->
 	<provider
 		android:name="android.support.v4.content.FileProvider"
@@ -85,18 +78,30 @@ v1.7.0  |   2020-03-17  |   涂仕聪    |   替换https协议、修改礼包兑
 		   android:name="android.support.FILE_PROVIDER_PATHS"
 		   android:resource="@xml/m4399single_file_paths" />
 	</provider>
-	<!-- For 4399 Recharge SDK -->
-	<activity
-		android:name="cn.m4399.recharge.ui.activity.RechargeActivity"
-		android:launchMode="singleTask"
-		android:configChanges="orientation|screenSize|keyboardHidden"
-		android:theme="@style/m4399ActivityTheme" />
-           
-	<!--------以下为第三方支付SDK Activity&Service配置------------>
-	<activity android:name="com.alipay.sdk.app.H5PayActivity" 
-		android:configChanges="orientation|keyboardHidden|navigation|screenSize"
-                android:exported="false"
-		android:screenOrientation="behind"/>
+
+        <receiver android:name="cn.m4399.single.gamebox.Installation$DownloadReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+            </intent-filter>
+        </receiver>
+
+	<!-- 4399 single activities-->
+        <activity
+            android:name="cn.m4399.single.component.HostActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="${demo_screen_orientation}"
+            android:theme="@style/m4399.Theme.Activity.Host"
+            tools:replace="android:screenOrientation" />
+
+        <!-- 第三方 Activity 方向应设置与游戏一致 -->
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="${demo_screen_orientation}"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            tools:replace="android:screenOrientation" />
 </application>
 ```
 * 注：第三方支付SDK的Activity需在AndroidManifest.xml中强制配置横竖屏，请游戏方根据游戏的横竖屏要求手工配置`landscape`|`portrait`
@@ -120,67 +125,24 @@ v1.7.0  |   2020-03-17  |   涂仕聪    |   替换https协议、修改礼包兑
 ## 初始化
 初始化推荐在游戏初始化过程中进行，析构函数则在游戏退出前执行。
 ```java
-//获取SDK单例
-mOpeCenter = SingleOperateCenter.getInstance();
 
-//配置SDK
-new OperateCenterConfig.Builder(this)
-	.setDebugEnabled(true)  //发布游戏时，要设为false
-	.setOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) //界面方向
-	.setSupportExcess(true) //设置是否支持超出金额充值
-	.setGameKey("70001") 	//换成实际游戏的gamekey
-	.setGameName("测试游戏")	//换成实际游戏的名字，原则上与游戏名字匹配
-	.build();
-	
-//设置充值回调	
-SingleRechargeListener singleRechargeListener = new SingleRechargeListener() {
-	/**
-	 * 充值过程结束时SDK回调此方法
-	 *  
-	 * 充值过程结束并不代表订单生命周期全部完成，SDK还需要查询订单状态，游戏
-	 * 要根据订单状态决定是否发放物品等
-	 *
-	 * @param msg 表示充值结果的友好的文本说明
-	 */
-	@Override
-	public void onRechargeFinished(boolean success, String msg)
-		Log.d(TAG, "Pay: [" + msg + "]");
-	}
-	
-	/**
-	 * 充值过程成功完成后，SDK会查询订单状态，根据订单状态状态通知游戏发放物品
-	 * 
-	 * @param shouldDeliver
-	 *  是否要发放物品
-	 * @param o
-	 *  封装了最后提交的订单信息的对象，主要包含以下成员，各成员都有getter方法
-	 *  payChannel：	充值渠道
-	 *  orderId：		充值订单号
-	 *  je：		充值金额
-	 *  goods：		购买的物品
-	 *
-	 * @return 
-	 *  物品发放过程是否成功
-	 */
-	@Override
-	synchronized public boolean notifyDeliverGoods(boolean shouldDeliver, RechargeOrder o) {
-		if (shouldDeliver) {
-			Log.d(TAG, "单机充值发放物品, [" + o + "]");
-			return true;
-		} else {
-			Log.d(TAG, "单机充值查询到的订单状态不正常，建议不要发放物品");
-			return false;
-		}
-	}
-};
 
+mRechargeController = new RechargeController(this);
+	
 //初始化SDK
-mOpeCenter.init(MainActivity.this, singleRechargeListener);
+OperateConfig config = new OperateConfig.Builder(this)
+        .setDebuggable(false) //发布游戏时，要设为false
+        .setOrientation(getGameOrientation()) //设置SDK界面方向，应与游戏设置一直
+        .setSupportExcess(true) // 设置“是否支持超出金额”默认值，也可以在每次充值的订单信息里设置
+        .setGameKey(getString(R.string.demo_label_game_key)) //换成实际游戏的game key
+        .setGameName(getString(R.string.demo_label_game_name)) //换成实际游戏的名字，原则上与游戏名字匹配
+        .build();
+SingleOperateCenter.init(this, config, mRechargeController.singleRechargeListener);
 ```
 
 `是否支持处理超出部分金额`也可单独设置  
 ```java
-mOpeCenter.setSupportExcess(support);
+config.setSupportExcess(support);
 ```
 `能否支持处理超出部分金额`指在使用SDK充值时，由于用户选择的充值渠道不同，可能造成实际充值金额超出游戏下单时传入的金额。如果游戏能够正确处理超出部分的金额，则本接口传入true。如果无法支持处理超出部分的金额，则传入false，SDK将会根据传入金额自动隐藏无法满足充值金额的渠道（例：开发者设置SupportExcess为false，充值时传入7元，此时4399一卡通中无7元面额的充值卡，此时4399一卡通的充值渠道将自动隐藏）。*SupportExcess*默认为false。
 
@@ -191,23 +153,27 @@ SDK将检查后台是否有新版本游戏上线，如果有，则显示更新�
 4399SDK的增量升级分为  
 - 全自动增量更新（无需操作，默认初始化完成）
 - 自定义界面增量更新 （当游戏选择使用该策略时，上线前需与4399运营人员沟通）
-自定义界面增量更新接入方法详见：[4399运营SDK增量升级说明](DeltaUpdate.md)  
+自定义界面增量更新接入方法详见：[4399单机SDK增量升级说明](DeltaUpdate.md)  
 
 
 
 ## 充值
 当用户需要充值时，可调用本接口启动充值中心界面。
 ```java
-mOpeCenter.recharge(MainActivity.this, je, productName);
+RechargeOrder order = new RechargeOrder(
+        // 充值金额，整数，基本要求大于1，小于50000
+        Integer.parseInt(tvMoney.getText().toString()))
+        //是否支持超出金额，这里是一个独立的接口，只要在充值之前调用都有作用
+        .supportExcess(checkSupportExcess.isChecked())
+        //是否传入商品名，这会影响商品在充值界面的显示
+        .commodity(checkHasSubject.isChecked() ? tvSubject.getText().toString() : null)
+        // 透传参数，JSON 字符串
+        .passThrough(getString(R.string.demo_label_test_extra));
+SingleOperateCenter.recharge(mainActivity, order);
 ```
-* `je`充值金额：是整数字符串，4399充值中心仅支持整数金额充值，最小充值金额`1`元，最大不超过`50000`元。
-* `productName`商品名称：最长不超过8个字符。 如果传入商品名，充值中心将直接显示改商品名称，如果充值金额大于下单时传入的`je`时，将显示商品名+XXX游戏币，相关游戏币的兑换比例在接入时提供给运营人员配置。如果未传入商品名，则直接显示XXX游戏币。
 
-如果开发者在调用充值接口时，想从游戏客户端传递一些信息到游戏服务端，即透传一些信息，可以用下面的接口：
-```java
-// extra是透传的字段
-public void recharge(Context context, String money, String productName,String extra)
-```
+* `commodity`商品名称：最长不超过8个字符。 如果传入商品名，充值中心将直接显示改商品名称，如果充值金额大于下单时传入的`je`时，将显示商品名+XXX游戏币，相关游戏币的兑换比例在接入时提供给运营人员配置。如果未传入商品名，则直接显示XXX游戏币。
+
 ## 礼包兑换
 - 调用方式
 ```java
@@ -226,6 +192,7 @@ mOpeCenter.validateGiftCode(MainActivity.this, new SingleOperateCenter.OnGiftCod
      * SDK 将打开验证界面，进行接收、验证兑换码和其他交互
      * 验证成功后通知接入方相关信息
      *
+     * @param activity Activity运行上下文
      * @param listener 验证成功的回调
      */
     public void validateGiftCode(Activity activity,OnGiftCodeValidatedListener listener) {
@@ -246,29 +213,17 @@ mOpeCenter.validateGiftCode(MainActivity.this, new SingleOperateCenter.OnGiftCod
         void onValidated(String code, String key);
     }
 ```
+
 ## 激活码验证
-- 接口说明（非必须接口,如需激活码验证功能请于代码中添加接口初始化）
-
-```java
-public class MainActivity extends Activity
-
-	...
-    private void initSDK() {
-        ....
-        
-        GameActivation.activate(activity, "xxxx", false);//中间参数为游戏的GameKey
-    }
-    
-}
-```
+[4399单机SDK激活模块API接入文档](GameActivation.md) 
 
 ## 析构
 游戏退出时调用本接口，释放SDK资源以及保存相关数据。
 ```java
-mOpeCenter.destroy();
+SingleOperateCenter.destroy();
 ```
 
-##显示SDK版本
+## 显示SDK版本
 ```java
-mOpeCenter.getVersion(); //查看SDK版本号
+String version = SingleOperateCenter.getVersion();
 ```
