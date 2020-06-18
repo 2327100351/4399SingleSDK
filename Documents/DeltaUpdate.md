@@ -1,60 +1,56 @@
 ﻿# 4399单机SDK增量升级说明
 ## 升级方式
 
-1. 全自动升级。 所有升级处理逻辑及界面显示，都由sdk完成。
-2. 自定义界面升级。 游戏方可以拿到升级信息及下载进度，自定义升级界面。
+1. 全自动升级：所有升级处理逻辑及界面显示，都由sdk完成。
+2. 自定义界面升级：游戏方可以拿到升级信息及下载进度，自定义升级界面。
 
 ## 全自动升级
-当游戏初始化时，SDK将检查后台是否有新版本游戏上线，如果有，则显示更新内容，并提示用户升级。后台在提交新版游戏时自动制作差分包，更新时用户只需下载APK文件中新旧版本有差异的部分。相关更新内容和版本提交事宜，请联系4399相关运营对接人员。全自动更新无需配置和代码接入，SDK在初始化时自动检查更新。
+接入方在后台提交新版游戏时自动制作差分包，更新时用户只需下载APK文件中新旧版本有差异的部分。更新内容和版本提交相关事宜，请联系4399相关运营对接人员。  
+当游戏初始化时，SDK将检查后台是否有新版本游戏上线，如果有，则显示更新内容，并提示用户升级。全自动更新无需配置和代码接入，SDK在初始化时自动检查更新。
 
 ## 自定义升级界面
 如果游戏需要自定义更新界面，需告知4399运营人员，由后台关闭全自动更新开关。由游戏方自主接入更新接口  
 
+如需了解安装相关的接口、类或设计细节，可以向开发者咨询接口详情等，或者查看 单机SDK javadoc API
+
 ### 1.1 检查版本更新
 ```java
-/**
+/*
  * @param MainActivity.this Activity上下文
  * @param OnCheckFinishedListener 检查更新回调，返回检查更新的结果
  */
-OperateCenter.getInstance().doCheck(MainActivity.this, new OnCheckFinishedListener() {
-	/**
- 	 * 返回新版本信息
- 	 * @param checkResultInfo 新版本信息的对象 里面包括服务端返回的升级信息
- 	 */
+SingleOperateCenter.doCheck(MainActivity.this, new UpgradeProgress<UpgradeInfo>() {
 	@Override
-	public void onCheckResponse(UpgradeInfo upgradeInfo) {
-		// 接入者可以在这里显示检查结果，检查结果由UpgradeInfo封装
-		showCheckResult(upgradeInfo);
-	}
-});
+	public void onStart() {}
+	
+	@Override
+	public void onProgress(long... ps) {}
+	
+	@Override
+	public void onFinished(int code, String message, UpgradeInfo info) {
+	    // 根据 info 对象内容展示更新对话框
+	    // 需要区分几种情况：
+	    // 1 检查更新成功
+	    //     1.1 有新版本
+	    //         1.1.1 本地有下载好的文件，展示安装对话框，后续调用doInstall接口
+	    //         1.1.2 本地没有下载好的文件，展示下载对话框，后续调用doInstall接口
+	    //     1.2 无新版本，游戏方更加需要决定是否需要提升
+	    // 2 检查更新失败，游戏方根据需要提供重试按钮，后续调用doCheck接口
+	    showUpgradeInfo();
+        }
+ });
 ```
-
-`UpgradeInfo` 封装了检查版本后，必要的可显示给用户的信息，其中公有方法：
-
-| 方法名 | 说明 |
-|-------|------|
-|getResultCode	 |获取检查结果状态码
-|getResultMsg    |获取检查结果提示信息|
-|getUpgradeType  |获取更新类型， 1为增量更新，0为全量更新|
-|getVersionName	 |获取线上最新版本VersionName|
-|getVersionCode  |获取线上最新版本Versioncode|
-|getUpgradeMsg	 |获取线上最版本的更新内容提示，如新增什么活动，调整什么装备属性等|
-|getUpgradeTime  |获取线上最新版本发布时间|
-|getUpgradeSize  |获取本次更新需要下载包的大小|
-|getNewApkSize   |获取线上最新版本APK大小|
-|haveLocalSrc    |本地是否有已经下载好的更新包，true表示有，false表示没有|
-|isCompel        |判断是否强制升级|
 
 ### 1.2 显示检查结果
 ```java
-private void showCheckResult(UpgradeInfo info) {
-	int code = info.getResultCode();
+private void showUpdateInfo(final UpgradeInfo info) {
+	int code = info.code();
 
-	if (code == UpgradeInfo.APK_CHECK_NO_UPDATE) {
+	if (code == UpgradeInfo.STATUS_UP_TO_DATE) {
 		// 没有更新，这里可以选择不提示
-	}  else if (code == UpgradeInfo.APK_CHECK_NEED_UPDATE) {
+	}  else if (code == UpgradeInfo.STATUS_NEED_UPGRADE) {
 		// 有更新内容
-		if (info.haveLocalSrc()) {
+		if (info.havePreparedFile()) {
 			// 本地已有下载好的更新包，显示“立即安装”, 即开始安装
 		} else {
 			// 本地没有下载好的更新包
@@ -78,10 +74,9 @@ private void showCheckResult(UpgradeInfo info) {
  * @param MainActivity.this Actvity上下文
  * @param OnDownloadListener 下载监听器，返回下载过程各个阶段的信息
  */
-OperateCenter.getInstance().doDownload(MainActivity.this, new OnDownloadListener() {
-
+SingleOperateCenter.doDownload(info, new UpgradeProgress<Void>() {
 	@Override
-	public void onDownloadStart() {
+	public void onStart() {
 		// 开始下载
 	}
 	
@@ -90,22 +85,19 @@ OperateCenter.getInstance().doDownload(MainActivity.this, new OnDownloadListener
 	 * @param max	   总的字节数， 单位B
 	 */
 	@Override
-	public void onDownloadProgress(long progress, long max) {
-		// 正在下载
+	public void onProgress(long... ps) {
+		long written = ps[0]; // 已完成下载的字节
+                long total = ps[1];   // 需要下载的字节
+		// 正在下载，展示进度
 	}
 	
 	@Override
-	public void onDownloadSuccess() {
-		// 下载成功, 可以提醒安装
-	}
-	
-	/**
-	 * @param resultCode, 下载失败时的HttpCode，由网络层返回
-	 * @param eMsg, 下载失败时的出错信息，由网络层返回（英文字符）
-	 */
-	@Override
-	public void onDownloadFail(int resultCode, String eMsg) {
-		// 下载失败
+	public void onFinished(int code, String message, Void aVoid) {
+		if (code == SUCCESS || code == SUCCESS_ALREADY) { // 下载成功, 可以提
+			doInstall(info);
+		} else { // 下载失败，提醒重试
+			
+		}
 	}
 ```
 ### 1.4 安装更新包
@@ -114,6 +106,25 @@ OperateCenter.getInstance().doDownload(MainActivity.this, new OnDownloadListener
  * 下载成功后，或者本地已有下载好的更新包时，可以调用此函数
  * SDK会根据是增量更新还是全量更新，采取不同的安装方式
  */
-OperateCenter.getInstance().doInstall();
+SingleOperateCenter.doInstall(info, new UpgradeProgress<Void>() {
+	@Override
+	public void onStart() {
+		// 开始安装，SDK 可能会做一些安装准备，如合并包
+	}
+	
+	@Override
+        public void onProgress(long... ps) {
+		if (ps[0] == UpgradeProgress.PROGRESS_INSTALLING) { // 内部开始安装流程
+		}
+	}
+	
+	@Override
+        public void onFinished(int code, String message, Void aVoid) {
+		if (code != UpgradeProgress.SUCCESS) { 
+			// 安装失败，可以提醒重试
+		} 
+		// 安装成功，应用进程将自动退出
+	}
+}
 ```
 
