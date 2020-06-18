@@ -11,7 +11,8 @@
 ## 自定义升级界面
 如果游戏需要自定义更新界面，需告知4399运营人员，由后台关闭全自动更新开关。由游戏方自主接入更新接口  
 
-如需了解安装相关的接口、类或设计细节，可以向开发者咨询接口详情等，或者查看 单机SDK javadoc API
+如需了解安装相关的接口、类或设计细节，可以向开发者咨询接口详情等，或者查看[4399 Single SDK-v2.0.0+31]( http://common:kCcy8iper6@sdkftp.4399doc.com/internal/single/2.0/javadoc/index.html
+)
 
 ### 1.1 检查版本更新
 ```java
@@ -80,10 +81,6 @@ SingleOperateCenter.doDownload(info, new UpgradeProgress<Void>() {
 		// 开始下载
 	}
 	
-	/**
-	 * @param progress 已下载的字节数，单位B
-	 * @param max	   总的字节数， 单位B
-	 */
 	@Override
 	public void onProgress(long... ps) {
 		long written = ps[0]; // 已完成下载的字节
