@@ -196,6 +196,7 @@ SingleOperateCenter.validateGiftCode(MainActivity.this, new OnGiftCodeValidatedL
 		// 接入方发放奖励，或进一步验证
 	}
 });
+```
 
 ## 激活码验证
 [4399单机SDK激活模块API接入文档](GameActivation.md) 
