@@ -40,7 +40,7 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 ## SDK集成流程
 假设现在你的工程目录名字叫project，下面将具体介绍如何将SDK接入project中。
 ### 关联资源工程
-1. 将m4399Single工程关联到project
+
 * 将m4399Single导入到eclipse中
 * 右键点击工程名→Properties→Android
 * 勾选Is Library→OK
@@ -109,7 +109,7 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 **注意：第三方 Activity 需要根据接入方应用屏幕方向，手动配置横竖屏**
 
 ### 代码混淆配置
-如果游戏有需要进行代码混淆，请不要混淆联编的jar包下的类，可以在`proguard.cfg`文件里追加以下配置排除SDK jar包中得类
+如果接入方有需要进行代码混淆，特别是使用jar 包依赖时，可以在`proguard.cfg`文件里追加以下配置
 ```
 # keep 4399 SDK
 -keep class cn.m4399.single.** {*;}
@@ -176,47 +176,26 @@ RechargeOrder order =
 SingleOperateCenter.recharge(mainActivity, order);
 ```
 
-* `commodity`商品名称：最长不超过8个字符。 如果传入商品名，充值中心将直接显示改商品名称，如果充值金额大于下单时传入的`je`时，将显示商品名+XXX游戏币，相关游戏币的兑换比例在接入时提供给运营人员配置。如果未传入商品名，则直接显示XXX游戏币。
+> **关于商品名称**
+> 
+> - 最长不超过8个字符
+> - 如果传入商品名，SDK 将显示改商品名称，如果充值金额大于下单时传入的金额，则显示“商品名+XXX游戏币”
+> - 如果未传入商品名，则直接显示“XXX游戏币”
 
 ## 礼包兑换
 - 调用方式
 ```java
+// SDK 将打开验证界面，进行接收、验证兑换码和其他交互
+// 验证成功后通知接入方相关信息
 SingleOperateCenter.validateGiftCode(MainActivity.this, new OnGiftCodeValidatedListener() {
+        // 礼包兑换码，礼包平台对礼包的标识，验证时使用
+        // @param key 接入方对礼包的标识，在申请礼包活动时一并提交给礼包平台；
+        // 验证成功时通知给接入方，发放时使用
 	@Override
 	public void onValidated(String code, String key) {
 		// 接入方发放奖励，或进一步验证
 	}
 });
-```
-- 接口说明
-```java		
-    /**
-     * 礼包兑换码验证接口
-     *
-     * SDK 将打开验证界面，进行接收、验证兑换码和其他交互
-     * 验证成功后通知接入方相关信息
-     *
-     * @param activity Activity运行上下文
-     * @param listener 验证成功的回调
-     */
-    public void validateGiftCode(Activity activity,OnGiftCodeValidatedListener listener) {
-        new CodeValidateDialog(activity,listener).show();
-    }
-
-    public interface OnGiftCodeValidatedListener {
-        /**
-         * 礼包兑换码验证成功回调
-         *
-         * 接入方可以在此方法发放物品，也可以进一步对用户验证
-         * <strong>若发放过程中可能出现错误，接入方需要自行处理</strong>
-         *
-         * @param code 礼包兑换码，礼包平台对礼包的标识，验证时使用
-         * @param key 接入方对礼包的标识，在申请礼包活动时一并提交给礼包平台；
-         *            验证成功时通知给接入方，发放时使用
-         */
-        void onValidated(String code, String key);
-    }
-```
 
 ## 激活码验证
 [4399单机SDK激活模块API接入文档](GameActivation.md) 
