@@ -63,16 +63,16 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
         android:allowBackup="false"
         android:networkSecurityConfig="@xml/m4399single_network_security">
 	
-	<!-- For 7.0 FileProvider -->
-	<provider
-		android:name="android.support.v4.content.FileProvider"
-		android:authorities="${applicationId}.single.FileProvider"
-		android:exported="false"
-		android:grantUriPermissions="true">
-		<meta-data
-		   android:name="android.support.FILE_PROVIDER_PATHS"
-		   android:resource="@xml/m4399single_file_paths" />
-	</provider>
+	 <!-- 接入方注册 FileProvider，注意替换 applicationId 为应用包名 -->
+        <provider
+            android:name="cn.m4399.single.api.SingleFileProvider"
+            android:authorities="${applicationId}.single.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/m4399single_file_paths" />
+        </provider>
 
         <receiver android:name="cn.m4399.single.gamebox.Installation$DownloadReceiver">
             <intent-filter>
