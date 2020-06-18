@@ -21,11 +21,6 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 ### 阅读对象
 本文档面向具有一定Android客户端开发能力，了解 Android 客户端的开发和管理人员。
 
-### 开发包内容
-
- - 4399单机SDK（Android）接入说明：SDK接入文档，即本文档
- - m4399Single：SDK资源文件工程内含SDK jar包和so库
- - m4399SingleDemo工程：Demo工程
 
 ## 集成流程
 <img src="Images/work_flow.png" alt="集成流程图" />
