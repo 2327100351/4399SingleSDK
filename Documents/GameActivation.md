@@ -23,7 +23,7 @@
 ## 三、接入流程
 
 ### 准备阶段      
-- 1、下载激活模块 [v1.1.1 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.1/4399ActivationSDK-v1.1.1+8.zip)
+- 1、下载激活模块 [v1.1.3 res+jar](http://common:kCcy8iper6@sdkftp.4399doc.com/external/activation/1.1/4399ActivationSDK-v1.1.3+10.zip)
 - 2、在[4399开放平台](https://open.4399.cn/main/home)注册游戏，经运营快速审核后，会得到`gameKey`（接过其他SDK的游戏，已经有此参数，可直接使用）  
  
 ### 工程配置
