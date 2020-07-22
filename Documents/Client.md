@@ -105,20 +105,19 @@ v2.0.0  |   2020-06-18  |   涂仕聪    |   重构SDK
 #### 代码混淆配置
 如果接入方有需要进行代码混淆，特别是使用jar 包依赖时，可以在`proguard.cfg`文件里追加以下配置
 ```
-# keep 4399 SDK
--keep class cn.m4399.single.** {*;}
--keep com.m4399.gamecenter.service.aidl.** {*;}
+-dontwarn android.support.v4.**
+-keep class android.support.v4.** { *; }
+-keep public class * extends android.support.v4.**
 
-# 如果使用的是support的jar包依赖
-# -keep android.support.v4.** {*;}
-
-# keep 支付宝接口
--dontwarn com.alipay.**
--keep class com.alipay.** {*;}
+-dontwarn com.unipay.**
+-keep class cn.m4399.operate.** {*;}
+-keep class cn.m4399.recharge.** {*;}
+-keepclassmembers class cn.m4399.recharge.R$* {*;}
+-keep public class cn.m4399.activation.api.**{*;}
 ```
 
 ## 接口调用
-如需了解相关的接口、类或设计细节，可以向开发者咨询接口详情等，或者查看[4399 Single SDK-v2.0.0+31]( http://common:kCcy8iper6@sdkftp.4399doc.com/internal/single/2.0/javadoc/index.html
+如需了解相关的接口、类或设计细节，可以向开发者咨询接口详情等，或者查看[4399 Single SDK-v2.0.3+44]( http://common:kCcy8iper6@sdkftp.4399doc.com/external/single/javadoc/index.html
 )
 ### 初始化
 初始化推荐在游戏初始化过程中进行，析构函数则在游戏退出前执行。
